@@ -1,6 +1,6 @@
 {
   "name": "dsh-docx-redline",
-  "version": "0.1.1",
+  "version": "0.1.0",
   "description": "DOCX structure inspection, byte-exact roundtrip and limited exact-run text replace.",
   "type": "module",
   "main": "./lib/plugin/index.js",
