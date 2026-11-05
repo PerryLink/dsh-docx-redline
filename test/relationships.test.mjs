@@ -48,3 +48,32 @@ test('external targets are counted, not treated as missing parts', () => {
   assert.equal(r.external, 1)
   assert.deepEqual(r.issues, [])
 })
+
+for (const [target, part] of [
+  ['../customXml/item1.xml', 'customXml/item1.xml'],
+  ['./media/../header1.xml', 'word/header1.xml'],
+  ['/word/../customXml/item1.xml', 'customXml/item1.xml'],
+]) {
+  test(`internal target ${target} resolves to its existing package part`, () => {
+    const r = relationshipCheck(package_(
+      doc('<w:p><w:hyperlink r:id="rId1"/></w:p>'),
+      rels(`<Relationship Id="rId1" Type="x" Target="${target}"/>`),
+      { [part]: strToU8('<part/>') },
+    ))
+    assert.equal(r.relationships, 1)
+    assert.equal(r.referenced, 1)
+    assert.equal(r.external, 0)
+    assert.deepEqual(r.issues, [])
+  })
+}
+
+test('a missing parent-relative target is still reported at its resolved part', () => {
+  const r = relationshipCheck(package_(
+    doc('<w:p><w:hyperlink r:id="rId1"/></w:p>'),
+    rels('<Relationship Id="rId1" Type="x" Target="../customXml/missing.xml"/>'),
+  ))
+  assert.deepEqual(r.issues, [{
+    code: 'E_DOC_REL_MISSING_PART',
+    detail: 'rId1 points at missing part customXml/missing.xml',
+  }])
+})

@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto'
+import { posix } from 'node:path'
 import { unzipSync, zipSync } from 'fflate'
 import { XMLParser, XMLValidator } from 'fast-xml-parser'
 import {
@@ -327,7 +328,7 @@ export function relationshipCheck(buffer: Buffer): RelationshipReport {
   let external = 0
   for (const [id, rel] of rels) {
     if (rel.external) { external += 1; continue }
-    const part = rel.target.startsWith('/') ? rel.target.slice(1) : `word/${rel.target.replace(/^\.\//, '')}`
+    const part = posix.resolve('/word', rel.target).slice(1)
     if (!raw[part]) issues.push({ code: 'E_DOC_REL_MISSING_PART', detail: `${id} points at missing part ${part}` })
   }
   return { relationships: rels.size, referenced: referenced.size, external, issues }

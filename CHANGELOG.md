@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- Resolve internal relationship targets relative to `word/document.xml`, including `.` and `..` segments, before checking package parts. Valid parent-relative targets no longer produce false missing-part reports on Windows or POSIX hosts.
+
 ## [0.1.0] — 2026-11-02
 
 ### Stable
