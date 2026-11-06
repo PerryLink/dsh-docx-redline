@@ -1,8 +1,8 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-docx-redline-flow-dark.svg">
-  <img src="docs/assets/dsh-docx-redline-flow-light.svg" width="100%" alt="dsh-docx-redline डेटा प्रवाह: स्थानीय .docx → doc.inspect से हिस्सा-दर-हिस्सा SHA-256 और संरचना गणनाएँ → docx स्टोरेज डोमेन → doc.roundtrip / redline.diff / doc.replace_text → स्थानीय आउटपुट; कोई नेटवर्क नहीं, कोई मॉडल कॉल नहीं">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-docx-redline-hero-en-dark.webp">
+  <img src="docs/assets/dsh-docx-redline-hero-en-light.webp" width="100%" alt="dsh-docx-redline: हिस्सा-दर-हिस्सा SHA-256, 13 संरचना गणनाएँ और पैराग्राफ़-स्तरीय रेडलाइन, पूरी तरह स्थानीय">
 </picture>
 
 # dsh-docx-redline
@@ -41,6 +41,11 @@ dsh plugin --profile <profile> add dsh-docx-redline
 
 - **किसके लिए उपयुक्त**: अनुबंध या सरकारी दस्तावेज़ के दो संस्करणों के मुख्य पाठ की तुलना; प्राप्त `.docx` की संरचना (पैराग्राफ़, तालिकाएँ, हेडर/फ़ुटर, टिप्पणियाँ, फ़ील्ड, बुकमार्क) पूरी है या नहीं, यह पुष्टि करना; मूल को सुरक्षित रखते हुए नियंत्रित सीमा में एक टेक्स्ट बदलना।
 - **किसके लिए नहीं**: ट्रैक्ड चेंज बनाना या संशोधन स्वीकार/अस्वीकार करना (यह पैकेज tracked changes नहीं लिखता); स्कैन किए PDF या चित्र; एन्क्रिप्टेड दस्तावेज़; `.doc` (97-2003 बाइनरी)।
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-docx-redline-flow-v5-dark.svg">
+  <img src="docs/assets/dsh-docx-redline-flow-v5-light.svg" width="100%" alt="dsh-docx-redline संरचना: स्थानीय DOCX पाथ गेट और ZIP सीमाओं से गुज़रता है; doc.inspect हिस्सा-दर-हिस्सा SHA-256 और 13 गणनाएँ लौटाता है; doc.roundtrip वही हिस्से तुलना कर zero_diff पर पहुँचता है">
+</picture>
 
 ## तीन चरणों में शुरुआत
 
@@ -317,9 +322,9 @@ node samples/quickstart/run.mjs
 | `fixtures/public/python-docx/` | 8 सार्वजनिक MIT-लाइसेंस DOCX नमूने (LICENSE / SOURCE के साथ) |
 | `samples/quickstart/` | सिंथेटिक अनुबंध v1/v2, रन स्क्रिप्ट और गोल्डन आउटपुट |
 | `scripts/` | lint, स्वीकृति, gate, pack जाँच, नमूना निर्माण और चित्र जनरेटर |
-| `docs/assets/` | hero SVG और वास्तविक रन कैप्चर |
+| `docs/assets/` | hero WebP, संरचना SVG और वास्तविक रन कैप्चर |
 
-हेडर डायग्राम [`scripts/gen-readme-assets.py`](scripts/gen-readme-assets.py) से बनता है (Python; आउटपुट `docs/assets/dsh-docx-redline-flow-{light,dark}.svg`) और दोबारा चलाया जा सकता है; `quickstart.png` `samples/quickstart/expected/console.txt` का 1:1 रेंडर है।
+हेडर hero और संरचना डायग्राम [`scripts/gen-readme-assets.py`](scripts/gen-readme-assets.py) से बनते हैं (Python + Pillow से hero WebP, संरचना डायग्राम के लिए हाथ से लिखा SVG) और दोबारा चलाए जा सकते हैं; `quickstart.png` `samples/quickstart/expected/console.txt` का 1:1 रेंडर है।
 
 Topics: `deepseek-harness`, `dsh`, `dsh-plugin`, `docx`, `redline`, `docx-inspect`, `perrylink`, `ooxml`, `document`
 

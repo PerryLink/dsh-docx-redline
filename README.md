@@ -1,8 +1,8 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-docx-redline-flow-dark.svg">
-  <img src="docs/assets/dsh-docx-redline-flow-light.svg" width="100%" alt="dsh-docx-redline 数据流：本地 .docx → doc.inspect 逐部件 SHA-256 与结构计数 → docx 存储域 → doc.roundtrip / redline.diff / doc.replace_text → 本地输出；不联网、不调用模型">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-docx-redline-hero-zh-dark.webp">
+  <img src="docs/assets/dsh-docx-redline-hero-zh-light.webp" width="100%" alt="dsh-docx-redline：本地 DOCX 逐部件 SHA-256、13 项结构计数与逐段差异">
 </picture>
 
 # dsh-docx-redline
@@ -41,6 +41,11 @@ dsh plugin --profile <profile> add dsh-docx-redline
 
 - **适合**：合同、公文两版之间的正文比对；收到 `.docx` 先确认结构是否完整（段落、表格、页眉页脚、批注、域、书签）；需要在可控范围内替换一处文本并保留原件。
 - **不适合**：需要写「修订痕迹」或接受/拒绝修订的场景（本包不写 tracked changes）；扫描件 PDF、图片；加密文档；`.doc`（97-2003 二进制）。
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-docx-redline-flow-v5-dark.svg">
+  <img src="docs/assets/dsh-docx-redline-flow-v5-light.svg" width="100%" alt="dsh-docx-redline 结构图：本地 DOCX 过路径门与 ZIP 上限，doc.inspect 取逐部件 SHA-256 与 13 项计数；doc.roundtrip 写副本后逐部件对照，判出 zero_diff">
+</picture>
 
 ## 三步上手
 
@@ -318,9 +323,9 @@ node samples/quickstart/run.mjs
 | `fixtures/public/python-docx/` | 8 份 MIT 许可公开 DOCX 样本（含 LICENSE / SOURCE） |
 | `samples/quickstart/` | 合成合同 v1/v2、运行脚本与金标 |
 | `scripts/` | lint、验收、gate、pack 校验、样例生成与配图脚本 |
-| `docs/assets/` | hero SVG 与真实运行截图 |
+| `docs/assets/` | hero WebP、结构图 SVG 与真实运行截图 |
 
-开头流程图由 [`scripts/gen-readme-assets.py`](scripts/gen-readme-assets.py) 程序化生成（Python，输出 `docs/assets/dsh-docx-redline-flow-{light,dark}.svg`），可重复执行；`quickstart.png` 是 `samples/quickstart/expected/console.txt` 的 1:1 渲染。
+开头 hero 与结构图由 [`scripts/gen-readme-assets.py`](scripts/gen-readme-assets.py) 程序化生成（Python + Pillow 出 hero WebP，手写 SVG 出结构图），可重复执行；`quickstart.png` 是 `samples/quickstart/expected/console.txt` 的 1:1 渲染。
 
 Topics：`deepseek-harness`, `dsh`, `dsh-plugin`, `docx`, `redline`, `docx-inspect`, `perrylink`, `ooxml`, `document`
 

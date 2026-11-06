@@ -1,8 +1,8 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-docx-redline-flow-dark.svg">
-  <img src="docs/assets/dsh-docx-redline-flow-light.svg" width="100%" alt="Flujo de datos de dsh-docx-redline: .docx local → doc.inspect con SHA-256 por parte y recuentos de estructura → dominio de almacenamiento docx → doc.roundtrip / redline.diff / doc.replace_text → salidas locales; sin red y sin llamada a modelo">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-docx-redline-hero-en-dark.webp">
+  <img src="docs/assets/dsh-docx-redline-hero-en-light.webp" width="100%" alt="dsh-docx-redline: SHA-256 por parte, 13 recuentos de estructura y un redline a nivel de párrafo, todo local">
 </picture>
 
 # dsh-docx-redline
@@ -41,6 +41,11 @@ dsh plugin --profile <profile> add dsh-docx-redline
 
 - **Adecuado para**: comparar el cuerpo de dos versiones de un contrato o documento oficial; confirmar que un `.docx` recibido está estructuralmente completo (párrafos, tablas, encabezados/pies, comentarios, campos, marcadores); reemplazar un texto dentro de un límite controlado conservando el original.
 - **No adecuado para**: producir control de cambios o aceptar/rechazar revisiones (este paquete no escribe tracked changes); PDF escaneados o imágenes; documentos cifrados; `.doc` (binario 97-2003).
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-docx-redline-flow-v5-dark.svg">
+  <img src="docs/assets/dsh-docx-redline-flow-v5-light.svg" width="100%" alt="dsh-docx-redline estructura: un DOCX local pasa la puerta de rutas y los límites ZIP; doc.inspect devuelve SHA-256 por parte y 13 recuentos; doc.roundtrip compara las mismas partes y llega a zero_diff">
+</picture>
 
 ## Instalación en tres pasos
 
@@ -317,9 +322,9 @@ node samples/quickstart/run.mjs
 | `fixtures/public/python-docx/` | 8 muestras DOCX públicas con licencia MIT (con LICENSE / SOURCE) |
 | `samples/quickstart/` | Contrato sintético v1/v2, script de ejecución y salida de referencia |
 | `scripts/` | lint, aceptación, gate, comprobación de pack, generación de muestras e imágenes |
-| `docs/assets/` | SVGs del hero y capturas reales |
+| `docs/assets/` | WebP del hero, SVG de estructura y capturas reales |
 
-El diagrama de cabecera lo genera [`scripts/gen-readme-assets.py`](scripts/gen-readme-assets.py) (Python; salida `docs/assets/dsh-docx-redline-flow-{light,dark}.svg`) y se puede volver a ejecutar; `quickstart.png` es un render 1:1 de `samples/quickstart/expected/console.txt`.
+El hero y el diagrama de estructura los genera [`scripts/gen-readme-assets.py`](scripts/gen-readme-assets.py) (Python + Pillow para el hero WebP, SVG escrito a mano para el diagrama) y se pueden volver a ejecutar; `quickstart.png` es un render 1:1 de `samples/quickstart/expected/console.txt`.
 
 Topics: `deepseek-harness`, `dsh`, `dsh-plugin`, `docx`, `redline`, `docx-inspect`, `perrylink`, `ooxml`, `document`
 
