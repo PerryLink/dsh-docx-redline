@@ -82,16 +82,16 @@ test('replaceExactText keeps replacement metacharacters literal and emits valid 
   }
 })
 
-test('doc.replace_text writes literal injection payloads to a parseable DOCX', async () => {
+test('doc_replace_text writes literal injection payloads to a parseable DOCX', async () => {
   const dir = await mkdtemp(path.join(os.tmpdir(), 'dsh-docx-inject-'))
   try {
     const file = path.join(dir, 'base.docx')
     await writeFile(file, makeDocx())
     const tools = Object.fromEntries(createTools({ table: new FakeTable(), baseDir: path.join(dir, 'store'), inputRoots: [dir] }).map((tool) => [tool.name, tool]))
     const exec = { callId: 'inject', agent: { id: 'tester' } }
-    const inspected = await tools['doc.inspect'].execute({ path: file }, exec)
+    const inspected = await tools['doc_inspect'].execute({ path: file }, exec)
     for (const [index, replacement] of ['cost $& 5', '$1', '$`'].entries()) {
-      const out = await tools['doc.replace_text'].execute({
+      const out = await tools['doc_replace_text'].execute({
         doc_id: inspected.doc_id,
         find: 'Alpha',
         replace: replacement,
@@ -108,15 +108,15 @@ test('doc.replace_text writes literal injection payloads to a parseable DOCX', a
   }
 })
 
-test('doc.roundtrip reports part-wise identity instead of whole-file SHA equality', async () => {
+test('doc_roundtrip reports part-wise identity instead of whole-file SHA equality', async () => {
   const dir = await mkdtemp(path.join(os.tmpdir(), 'dsh-docx-partwise-'))
   try {
     const file = path.join(dir, 'base.docx')
     await writeFile(file, makeDocx())
     const tools = Object.fromEntries(createTools({ table: new FakeTable(), baseDir: path.join(dir, 'store'), inputRoots: [dir] }).map((tool) => [tool.name, tool]))
     const exec = { callId: 'roundtrip', agent: { id: 'tester' } }
-    const inspected = await tools['doc.inspect'].execute({ path: file }, exec)
-    const rt = await tools['doc.roundtrip'].execute({ doc_id: inspected.doc_id }, exec)
+    const inspected = await tools['doc_inspect'].execute({ path: file }, exec)
+    const rt = await tools['doc_roundtrip'].execute({ doc_id: inspected.doc_id }, exec)
     assert.equal(rt.zero_diff, true)
     assert.equal(rt.parts_compared, inspected.parts_count)
     assert.deepEqual(rt.missing_parts, [])

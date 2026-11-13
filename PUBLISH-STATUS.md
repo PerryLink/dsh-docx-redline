@@ -24,8 +24,8 @@
 
 - `latest` and `next` both `0.1.0-alpha.2`; 11/11 local tests, 3 S1 gate rows.
 - GitHub Actions `ci` run 41168790819: success.
-- `redline.diff` is **text-level paragraph diff only**; it does not write OOXML or produce a Word redline, and has no separate acceptance row.
+- `redline_diff` is **text-level paragraph diff only**; it does not write OOXML or produce a Word redline, and has no separate acceptance row.
 
 ## 0.1.0-alpha.3 — limited OOXML replace (2026-10-31)
 
-- Added `doc.replace_text`; exact single-run write; no comments/fields rewrite; synthetic tests.
+- Added `doc_replace_text`; exact single-run write; no comments/fields rewrite; synthetic tests.

@@ -68,15 +68,15 @@ test('inspectDocx rejects non-DOCX and missing document.xml', () => {
   assert.throws(() => inspectDocx(Buffer.from(zipSync({ '[Content_Types].xml': strToU8(contentTypes) }))), /E_DOC_UNREADABLE/)
 })
 
-test('doc.inspect and doc.roundtrip are idempotent and zero-diff', async () => {
+test('doc_inspect and doc_roundtrip are idempotent and zero-diff', async () => {
   const dir = await mkdtemp(path.join(os.tmpdir(), 'dsh-docx-test-'))
   try {
     const file = path.join(dir, 'sample.docx')
     await writeFile(file, makeDocx())
     const table = new FakeTable()
     const tools = createTools({ table, baseDir: path.join(dir, 'store'), inputRoots: [dir] })
-    const inspect = tools.find((tool) => tool.name === 'doc.inspect')
-    const roundtrip = tools.find((tool) => tool.name === 'doc.roundtrip')
+    const inspect = tools.find((tool) => tool.name === 'doc_inspect')
+    const roundtrip = tools.find((tool) => tool.name === 'doc_roundtrip')
     const exec = { callId: 'call-1', agent: { id: 'agent-1' } }
     const first = await inspect.execute({ path: file, entity_id: 'ENT-A' }, exec)
     assert.equal(first.existing, false)
@@ -98,8 +98,8 @@ test('path allowlist and unknown doc fail closed', async () => {
   try {
     const table = new FakeTable()
     const tools = createTools({ table, baseDir: path.join(dir, 'store'), inputRoots: [dir] })
-    const inspect = tools.find((tool) => tool.name === 'doc.inspect')
-    const roundtrip = tools.find((tool) => tool.name === 'doc.roundtrip')
+    const inspect = tools.find((tool) => tool.name === 'doc_inspect')
+    const roundtrip = tools.find((tool) => tool.name === 'doc_roundtrip')
     await assert.rejects(() => inspect.execute({ path: '/etc/hosts' }, { callId: 'c' }), /E_DOC_PATH_NOT_ALLOWED/)
     await assert.rejects(() => roundtrip.execute({ doc_id: 'missing' }, { callId: 'c' }), /E_DOC_DOC_NOT_FOUND/)
   } finally {
@@ -107,7 +107,7 @@ test('path allowlist and unknown doc fail closed', async () => {
   }
 })
 
-test('redline.diff reports paragraph changes without writing OOXML', async () => {
+test('redline_diff reports paragraph changes without writing OOXML', async () => {
   const dir = await mkdtemp(path.join(os.tmpdir(), 'dsh-docx-diff-'))
   try {
     const baseFile = path.join(dir, 'base.docx')
@@ -117,9 +117,9 @@ test('redline.diff reports paragraph changes without writing OOXML', async () =>
     const tools = createTools({ table: new FakeTable(), baseDir: path.join(dir, 'store'), inputRoots: [dir] })
     const byName = Object.fromEntries(tools.map((tool) => [tool.name, tool]))
     const exec = { callId: 'diff-1', agent: { id: 'tester' } }
-    const base = await byName['doc.inspect'].execute({ path: baseFile }, exec)
-    const target = await byName['doc.inspect'].execute({ path: targetFile }, exec)
-    const diff = await byName['redline.diff'].execute({ base_doc_id: base.doc_id, target_doc_id: target.doc_id }, exec)
+    const base = await byName['doc_inspect'].execute({ path: baseFile }, exec)
+    const target = await byName['doc_inspect'].execute({ path: targetFile }, exec)
+    const diff = await byName['redline_diff'].execute({ base_doc_id: base.doc_id, target_doc_id: target.doc_id }, exec)
     assert.ok(diff.added + diff.removed > 0)
     assert.ok(diff.hunks.length > 0)
   } finally {
@@ -127,7 +127,7 @@ test('redline.diff reports paragraph changes without writing OOXML', async () =>
   }
 })
 
-test('doc.replace_text limited OOXML write', async () => {
+test('doc_replace_text limited OOXML write', async () => {
   const dir = await mkdtemp(path.join(os.tmpdir(), 'dsh-docx-replace-'))
   try {
     const file = path.join(dir, 'base.docx')
@@ -135,8 +135,8 @@ test('doc.replace_text limited OOXML write', async () => {
     const tools = createTools({ table: new FakeTable(), baseDir: path.join(dir, 'store'), inputRoots: [dir] })
     const by = Object.fromEntries(tools.map((tool) => [tool.name, tool]))
     const exec = { callId: 'replace', agent: { id: 'tester' } }
-    const inspected = await by['doc.inspect'].execute({ path: file }, exec)
-    const replaced = await by['doc.replace_text'].execute({ doc_id: inspected.doc_id, find: 'Alpha', replace: 'Beta' }, exec)
+    const inspected = await by['doc_inspect'].execute({ path: file }, exec)
+    const replaced = await by['doc_replace_text'].execute({ doc_id: inspected.doc_id, find: 'Alpha', replace: 'Beta' }, exec)
     assert.equal(replaced.replacements, 1)
     const texts = paragraphTexts(await readFile(replaced.path))
     assert.ok(texts.some((text) => text.includes('Beta')))

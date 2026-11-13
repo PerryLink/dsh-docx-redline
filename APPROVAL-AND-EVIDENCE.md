@@ -11,7 +11,7 @@
 
 ## S1 scope (narrow)
 
-- `doc.inspect`: DOCX ZIP/XML reader; structure counts for paragraphs, tables, headers/footers, footnotes, comments, fields, bookmarks, numbering, sections/styles.
-- `doc.roundtrip`: byte/part-hash no-change copy; zero-diff report.
+- `doc_inspect`: DOCX ZIP/XML reader; structure counts for paragraphs, tables, headers/footers, footnotes, comments, fields, bookmarks, numbering, sections/styles.
+- `doc_roundtrip`: byte/part-hash no-change copy; zero-diff report.
 - Storage: one `docx` domain / `documents` table.
 - Client/Skill/Bundle: deferred (S1 host-only).

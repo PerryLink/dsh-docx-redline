@@ -37,14 +37,14 @@ dsh plugin --profile <profile> add dsh-docx-redline
 
 ## 它是什么
 
-`dsh-docx-redline` 在本地读取 `.docx`（OOXML ZIP 包），给出逐部件 SHA-256 与 13 项结构计数；需要时复制一份做逐部件一致的往返校验，或对两份已检查的文档做段落级文本 diff、统计 `w:ins` / `w:del` 修订、检查包关系完整性，并在**唯一精确匹配**的前提下替换一个 `w:t` 文本运行。六个工具都带 `doc.` / `redline.` 命名空间；不联网、不调用模型、不上传，原文件不会被修改。
+`dsh-docx-redline` 在本地读取 `.docx`（OOXML ZIP 包），给出逐部件 SHA-256 与 13 项结构计数；需要时复制一份做逐部件一致的往返校验，或对两份已检查的文档做段落级文本 diff、统计 `w:ins` / `w:del` 修订、检查包关系完整性，并在**唯一精确匹配**的前提下替换一个 `w:t` 文本运行。六个工具都带 `doc_` / `redline_` 命名空间；不联网、不调用模型、不上传，原文件不会被修改。
 
 - **适合**：合同、公文两版之间的正文比对；收到 `.docx` 先确认结构是否完整（段落、表格、页眉页脚、批注、域、书签）；需要在可控范围内替换一处文本并保留原件。
 - **不适合**：需要写「修订痕迹」或接受/拒绝修订的场景（本包不写 tracked changes）；扫描件 PDF、图片；加密文档；`.doc`（97-2003 二进制）。
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-docx-redline-flow-v5-dark.svg">
-  <img src="docs/assets/dsh-docx-redline-flow-v5-light.svg" width="100%" alt="dsh-docx-redline 结构图：本地 DOCX 过路径门与 ZIP 上限，doc.inspect 取逐部件 SHA-256 与 13 项计数；doc.roundtrip 写副本后逐部件对照，判出 zero_diff">
+  <img src="docs/assets/dsh-docx-redline-flow-v5-light.svg" width="100%" alt="dsh-docx-redline 结构图：本地 DOCX 过路径门与 ZIP 上限，doc_inspect 取逐部件 SHA-256 与 13 项计数；doc_roundtrip 写副本后逐部件对照，判出 zero_diff">
 </picture>
 
 ## 三步上手
@@ -79,11 +79,11 @@ dsh plugin --profile <profile> add dsh-docx-redline
 
    ```
    $ node samples/quickstart/run.mjs
-   doc.inspect            DOC-1 parts=9 p=11 tbl=1 hdr=1 ftr=1 comments=1 fields=1 bookmarks=1 warnings=0
-   doc.relationship_check relationships=6 referenced=3 external=1 issues=0
-   doc.roundtrip          DOC-1 zero_diff=true parts_compared=9
-   doc.change_summary     DOC-2 insertions=2 deletions=1 authors=张三:2 李四:1
-   redline.diff           DOC-1 → DOC-2 added=2 removed=1 hunks=3
+   doc_inspect            DOC-1 parts=9 p=11 tbl=1 hdr=1 ftr=1 comments=1 fields=1 bookmarks=1 warnings=0
+   doc_relationship_check relationships=6 referenced=3 external=1 issues=0
+   doc_roundtrip          DOC-1 zero_diff=true parts_compared=9
+   doc_change_summary     DOC-2 insertions=2 deletions=1 authors=张三:2 李四:1
+   redline_diff           DOC-1 → DOC-2 added=2 removed=1 hunks=3
    ok: quickstart finished (6 tool calls, roundtrip byte-identical per part)
    ```
 
@@ -100,12 +100,12 @@ dsh plugin --profile <profile> add dsh-docx-redline
 
 ## 核心能力
 
-- **结构盘点** —— `doc.inspect` 读本地 `.docx` 的 ZIP/XML，保存原件，返回逐部件 SHA-256 与 13 项计数：段落、表格、表格行/单元格、页眉/页脚、脚注、批注、域、书签、编号段落、节、样式。同一文件按 SHA-256 去重，重复检查返回 `existing: true`。
-- **逐部件往返** —— `doc.roundtrip` 复制归档包，分别解包输入与输出，逐部件比对哈希；返回 `zero_diff`、`parts_compared`、缺失/多余部件与哈希不符列表。不是拿文件跟自己比。
-- **段落级差异** —— `redline.diff` 对两份已检查文档做 LCS 段落比对，返回新增/删除段落数与有序 hunk；只读，不写 OOXML，不生成 Word 修订痕迹。
-- **修订统计** —— `doc.change_summary` 统计 `w:ins` / `w:del` 数量与作者分布；只统计，不接受或拒绝修订。
-- **关系完整性** —— `doc.relationship_check` 校验 `document.xml` 里的 `r:id` / `r:embed` / `r:link` 是否在 `document.xml.rels` 声明、内部目标部件是否存在；外部目标单独计数；只报告，不修复。
-- **受限替换** —— `doc.replace_text` 只替换 `word/document.xml` 中一个精确匹配的 `w:t` 运行，写到 `outputs/` 新文件；0 个或多个匹配、跨运行文本都会失败关闭，写入前还会校验生成的 WML 是否可解析。
+- **结构盘点** —— `doc_inspect` 读本地 `.docx` 的 ZIP/XML，保存原件，返回逐部件 SHA-256 与 13 项计数：段落、表格、表格行/单元格、页眉/页脚、脚注、批注、域、书签、编号段落、节、样式。同一文件按 SHA-256 去重，重复检查返回 `existing: true`。
+- **逐部件往返** —— `doc_roundtrip` 复制归档包，分别解包输入与输出，逐部件比对哈希；返回 `zero_diff`、`parts_compared`、缺失/多余部件与哈希不符列表。不是拿文件跟自己比。
+- **段落级差异** —— `redline_diff` 对两份已检查文档做 LCS 段落比对，返回新增/删除段落数与有序 hunk；只读，不写 OOXML，不生成 Word 修订痕迹。
+- **修订统计** —— `doc_change_summary` 统计 `w:ins` / `w:del` 数量与作者分布；只统计，不接受或拒绝修订。
+- **关系完整性** —— `doc_relationship_check` 校验 `document.xml` 里的 `r:id` / `r:embed` / `r:link` 是否在 `document.xml.rels` 声明、内部目标部件是否存在；外部目标单独计数；只报告，不修复。
+- **受限替换** —— `doc_replace_text` 只替换 `word/document.xml` 中一个精确匹配的 `w:t` 运行，写到 `outputs/` 新文件；0 个或多个匹配、跨运行文本都会失败关闭，写入前还会校验生成的 WML 是否可解析。
 - **纯本地** —— 源码没有 HTTP / DNS / WebSocket 调用；不联网、不调用模型、不上传，原文件不会被修改。
 
 ### 工具面
@@ -114,12 +114,12 @@ dsh plugin --profile <profile> add dsh-docx-redline
 
 | 工具 | 用途 | 风险 |
 |---|---|---|
-| `doc.inspect` | 读取本地 `.docx` 的 ZIP/XML，保存原件，返回逐部件 SHA-256 与结构计数（段落、表格、表格行/单元格、页眉/页脚、脚注、批注、域、书签、编号段落、节、样式） | R1 本地写（存原件） |
-| `doc.roundtrip` | 复制归档包，解包双方并逐部件比对哈希；返回逐部件一致报告（`zero_diff` / `parts_compared` / 缺失 / 多余 / 哈希不符） | R1 本地写 |
-| `redline.diff` | 对两份已检查文档做文本级段落 diff（LCS）：新增/删除段落与有序 hunk；不写 OOXML | R0 只读 |
-| `doc.replace_text` | 替换 `word/document.xml` 中一个精确匹配的 `w:t` 文本运行，写到 `outputs/` 新文件；不唯一或跨运行即失败关闭 | R1 本地写 |
-| `doc.change_summary` | 统计 `w:ins` / `w:del` 修订数量与作者；不接受/拒绝修订 | R0 只读 |
-| `doc.relationship_check` | 检查 `r:id` / `r:embed` / `r:link` 是否在 `document.xml.rels` 声明、内部目标部件是否存在；只报告不修复 | R0 只读 |
+| `doc_inspect` | 读取本地 `.docx` 的 ZIP/XML，保存原件，返回逐部件 SHA-256 与结构计数（段落、表格、表格行/单元格、页眉/页脚、脚注、批注、域、书签、编号段落、节、样式） | R1 本地写（存原件） |
+| `doc_roundtrip` | 复制归档包，解包双方并逐部件比对哈希；返回逐部件一致报告（`zero_diff` / `parts_compared` / 缺失 / 多余 / 哈希不符） | R1 本地写 |
+| `redline_diff` | 对两份已检查文档做文本级段落 diff（LCS）：新增/删除段落与有序 hunk；不写 OOXML | R0 只读 |
+| `doc_replace_text` | 替换 `word/document.xml` 中一个精确匹配的 `w:t` 文本运行，写到 `outputs/` 新文件；不唯一或跨运行即失败关闭 | R1 本地写 |
+| `doc_change_summary` | 统计 `w:ins` / `w:del` 修订数量与作者；不接受/拒绝修订 | R0 只读 |
+| `doc_relationship_check` | 检查 `r:id` / `r:embed` / `r:link` 是否在 `document.xml.rels` 声明、内部目标部件是否存在；只报告不修复 | R0 只读 |
 
 ### 输入与输出
 
@@ -192,8 +192,8 @@ PS1-QS01,quickstart 样例与金标一致,1/1,1,scripts/acceptance.mjs,1271d4702
 ```
 
 - 插件 `inject = ['tools', 'storageDomain']`：两个服务都必须在场，插件才会挂载；缺 `storageDomain` 时不会静默降级。
-- 工具注册在 `ctx.tools`；`doc.inspect` 写原件、`doc.roundtrip` 写副本、`doc.replace_text` 写 `outputs/`，其余三个工具只读。
-- `doc_id` 由 `doc.inspect` 生成并存在会话的 `docx` 域 `documents` 表里；换会话或没先 inspect 就没有该记录。
+- 工具注册在 `ctx.tools`；`doc_inspect` 写原件、`doc_roundtrip` 写副本、`doc_replace_text` 写 `outputs/`，其余三个工具只读。
+- `doc_id` 由 `doc_inspect` 生成并存在会话的 `docx` 域 `documents` 表里；换会话或没先 inspect 就没有该记录。
 
 </details>
 
@@ -209,7 +209,7 @@ PS1-QS01,quickstart 样例与金标一致,1/1,1,scripts/acceptance.mjs,1271d4702
 <details>
 <summary>会改坏我的文档吗？</summary>
 
-不会改原文件。`doc.inspect` 只把原件复制到 `originals/`，`doc.roundtrip` 只写 `roundtrip/` 副本，`doc.replace_text` 只写 `outputs/` 下的新文件；替换要求待替换文本在 `word/document.xml` 中**唯一**，0 个或多个匹配、跨运行文本都会失败关闭，写入前还会校验生成的 WML。
+不会改原文件。`doc_inspect` 只把原件复制到 `originals/`，`doc_roundtrip` 只写 `roundtrip/` 副本，`doc_replace_text` 只写 `outputs/` 下的新文件；替换要求待替换文本在 `word/document.xml` 中**唯一**，0 个或多个匹配、跨运行文本都会失败关闭，写入前还会校验生成的 WML。
 
 </details>
 
@@ -223,7 +223,7 @@ PS1-QS01,quickstart 样例与金标一致,1/1,1,scripts/acceptance.mjs,1271d4702
 <details>
 <summary>结果不对，或缺页眉/页脚提示怎么办？</summary>
 
-先看 `warnings`：没有页眉/页脚部件、没有域、书签、编号或批注时会单独提示。差异是**段落级文本**比对，不还原字符级修订；被删除的文字（`w:delText`）不计入当前正文。`doc.relationship_check` 只报告 `E_DOC_REL_UNRESOLVED` / `E_DOC_REL_MISSING_PART`，不修复——在 Word 里打开并另存一次通常能修好关系。
+先看 `warnings`：没有页眉/页脚部件、没有域、书签、编号或批注时会单独提示。差异是**段落级文本**比对，不还原字符级修订；被删除的文字（`w:delText`）不计入当前正文。`doc_relationship_check` 只报告 `E_DOC_REL_UNRESOLVED` / `E_DOC_REL_MISSING_PART`，不修复——在 Word 里打开并另存一次通常能修好关系。
 
 </details>
 
@@ -240,11 +240,11 @@ PS1-QS01,quickstart 样例与金标一致,1/1,1,scripts/acceptance.mjs,1271d4702
 - **写入范围**：仅 `dsh-docx-redline` 的存储根（`originals/`、`roundtrip/`、`outputs/`）；原文件不被修改。
 - **无网络**：源码中没有 HTTP / DNS / WebSocket 调用；不连外部系统，不上传数据。
 - **ZIP 炸弹防护**：每次读取都走带解压前上限的 `safeUnzip()`（条目 >1000、单条目 >4 MB、解压总量 >32 MB、压缩比 >100 即 `E_DOC_ZIP_LIMIT`），解压后还会复核实际大小。
-- **替换失败关闭**：`doc.replace_text` 只接受唯一精确匹配；函数式替换让 `$&`、`$1` 等保持字面量；写入前用 `XMLValidator` / `XMLParser` 校验生成的 WML，不合法就在写盘前失败。
-- **往返证明**：`doc.roundtrip` 解包输入与输出后逐部件比较哈希，而不是拿整包 SHA 跟自己比。
+- **替换失败关闭**：`doc_replace_text` 只接受唯一精确匹配；函数式替换让 `$&`、`$1` 等保持字面量；写入前用 `XMLValidator` / `XMLParser` 校验生成的 WML，不合法就在写盘前失败。
+- **往返证明**：`doc_roundtrip` 解包输入与输出后逐部件比较哈希，而不是拿整包 SHA 跟自己比。
 - **证据哈希**：原件 SHA-256、逐部件 SHA-256、记录级 `evidence_sha256` 都可复核。
 - **风险分级**：写文件的工具标 R1（本地写），只读工具标 R0；逐工具见「核心能力」工具表。
-- **关系检查只读**：`doc.relationship_check` 只返回 issues，不修改包。
+- **关系检查只读**：`doc_relationship_check` 只返回 issues，不修改包。
 
 ## 权限与数据
 
@@ -263,10 +263,10 @@ PS1-QS01,quickstart 样例与金标一致,1/1,1,scripts/acceptance.mjs,1271d4702
 ## 已知限制
 
 - **仅公开/合成验证。** alpha / partial / not counted / 非 GA；客户证据为 0 对真实双版本 DOCX、0 份畸形 DOCX，E2 doc-core 未交付；不构成客户准确率、Word/LibreOffice 保真度、修订位置准确率或 GA 可用性声明。
-- **文本级而非字符级。** `redline.diff` 做段落级文本比对，不是字符级修订；被删除的文字（`w:delText`）不计入当前正文。
-- **不写修订痕迹。** 不生成 Word tracked changes，也不提供接受/拒绝修订；`doc.change_summary` 只统计 `w:ins` / `w:del`。
-- **替换面很窄。** `doc.replace_text` 只处理单个精确 `w:t` 运行；文本不唯一、出现 0 次或跨运行都会失败；匹配文本以外的批注与域保持原样，不解析、不改动。
-- **关系检查不修复。** `doc.relationship_check` 只报告未声明的引用与缺失目标；修复需在 Word 里另存或改包。
+- **文本级而非字符级。** `redline_diff` 做段落级文本比对，不是字符级修订；被删除的文字（`w:delText`）不计入当前正文。
+- **不写修订痕迹。** 不生成 Word tracked changes，也不提供接受/拒绝修订；`doc_change_summary` 只统计 `w:ins` / `w:del`。
+- **替换面很窄。** `doc_replace_text` 只处理单个精确 `w:t` 运行；文本不唯一、出现 0 次或跨运行都会失败；匹配文本以外的批注与域保持原样，不解析、不改动。
+- **关系检查不修复。** `doc_relationship_check` 只报告未声明的引用与缺失目标；修复需在 Word 里另存或改包。
 - **格式限制。** 不支持 `.doc`（97-2003 二进制）、PDF、加密文档、扫描件/图片；加密文档需先去密码。
 - **ZIP 上限。** 条目 ≤1000、单条目解压后 ≤4 MB、解压总量 ≤32 MB、压缩比 ≤100（>1 MB 的条目）——超大文档需先拆分。
 - **输入根目录限制。** 工具只读 `DSH_DOCX_INPUT_ROOTS`（缺省 cwd）内的文件；路径越界直接拒绝。

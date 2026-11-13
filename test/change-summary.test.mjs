@@ -35,7 +35,7 @@ test('the tool reads a local docx and returns the same summary', async () => {
     const file = path.join(dir, 'sample.docx')
     await writeFile(file, makeDocx())
     const tools = Object.fromEntries(createTools({ table: new FakeTable(), baseDir: dir, inputRoots: [dir] }).map((t) => [t.name, t]))
-    const r = await tools['doc.change_summary'].execute({ path: file }, { callId: 'rev' })
+    const r = await tools['doc_change_summary'].execute({ path: file }, { callId: 'rev' })
     assert.equal(r.total, 3)
     assert.equal(r.insertions, 2)
   } finally { await rm(dir, { recursive: true, force: true }) }

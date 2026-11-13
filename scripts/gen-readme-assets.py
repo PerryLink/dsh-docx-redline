@@ -10,8 +10,8 @@ src/adapters/docx-zip.ts:
 
   local .docx -> realpath allowlist -> safeUnzip limits -> inspectDocx()
   (per-part SHA-256 + 13 structure counts) -> docx domain (documents table)
-  -> doc.roundtrip copies the package, unpacks both sides and compares every
-  part hash; redline.diff does paragraph LCS; doc.replace_text rewrites one
+  -> doc_roundtrip copies the package, unpacks both sides and compares every
+  part hash; redline_diff does paragraph LCS; doc_replace_text rewrites one
   exact w:t run; change_summary / relationship_check stay read-only.
 
 Hero (per language): a document page (paragraph/table/header/footer tags), the
@@ -281,7 +281,7 @@ def hero_diff(img: Image.Image, s, lang: str) -> Image.Image:
     img = card(img, (1078, 332, 1392, 456), s, radius=20)
     d = ImageDraw.Draw(img)
     h = HERO[lang]
-    d.text((1100, 346), "redline.diff", font=font(17, "mono"),
+    d.text((1100, 346), "redline_diff", font=font(17, "mono"),
            fill=hx(s["accent"]))
     d.text((1370, 348), h["diff_note"],
            font=font(14, "cjk" if lang == "zh" else "en"),
@@ -424,8 +424,8 @@ def flow_svg(skin: str) -> str:
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" '
         f'viewBox="0 0 {W} {H}" role="img" '
         f'aria-label="dsh-docx-redline part-wise roundtrip: a local DOCX '
-        f'passes the path allowlist and ZIP limits, doc.inspect hashes the '
-        f'nine parts and counts the structure, doc.roundtrip copies the '
+        f'passes the path allowlist and ZIP limits, doc_inspect hashes the '
+        f'nine parts and counts the structure, doc_roundtrip copies the '
         f'package and compares the same parts, and the middle seam ends in '
         f'zero_diff; paragraph diff, exact replace, revision summary and '
         f'relationship check stay on the read-only side">')
@@ -477,7 +477,7 @@ def flow_svg(skin: str) -> str:
     out.append(rect(50, 176, 390, 254, s, s["card"], s["card_edge"],
                     rx=18, shadow=True))
     out.append(f'<circle cx="66" cy="204" r="4" fill="{s["accent"]}"/>')
-    out.append(t(78, 210, "doc.inspect", 17, s["accent"], weight="700",
+    out.append(t(78, 210, "doc_inspect", 17, s["accent"], weight="700",
                  maxw=150))
     out.append(t(418, 210, "13 counts", 14, s["faint"], anchor="end",
                  maxw=90))
@@ -500,7 +500,7 @@ def flow_svg(skin: str) -> str:
     out.append(rect(660, 176, 390, 254, s, s["card"], s["card_edge"],
                     rx=18, shadow=True))
     out.append(f'<circle cx="676" cy="204" r="4" fill="{s["accent2"]}"/>')
-    out.append(t(688, 210, "doc.roundtrip", 17, s["accent"], weight="700",
+    out.append(t(688, 210, "doc_roundtrip", 17, s["accent"], weight="700",
                  maxw=170))
     out.append(t(1028, 210, "9 parts", 14, s["faint"], anchor="end",
                  maxw=80))
@@ -562,13 +562,13 @@ def flow_svg(skin: str) -> str:
         out.append(f'<line x1="{x}" y1="534" x2="{x}" y2="592" '
                    f'stroke="{s["grid"]}" stroke-width="1"/>')
     tools = [
-        (74, "redline.diff", "paragraph LCS · +2 −1",
+        (74, "redline_diff", "paragraph LCS · +2 −1",
          "3 hunks · R0 read-only"),
-        (324, "doc.replace_text", "one exact w:t run",
+        (324, "doc_replace_text", "one exact w:t run",
          "→ outputs/ · fail closed"),
-        (574, "doc.change_summary", "w:ins 2 · w:del 1",
+        (574, "doc_change_summary", "w:ins 2 · w:del 1",
          "count only · R0"),
-        (824, "doc.relationship_check", "r:id 6 · referenced 3",
+        (824, "doc_relationship_check", "r:id 6 · referenced 3",
          "issues 0 · R0"),
     ]
     for x, name, detail, note in tools:

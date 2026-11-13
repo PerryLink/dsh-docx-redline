@@ -2,12 +2,12 @@ $ node samples/quickstart/run.mjs
 sample: samples/quickstart/input/contract-v1.docx (3760 B, sha256 7dbae885836ab62b…)
 sample: samples/quickstart/input/contract-v2.docx (3904 B, sha256 d196725e2c8f9bb7…)
 samples are synthetic: fictional parties/amounts, no customer document
-doc.inspect            DOC-1 parts=9 p=11 tbl=1 hdr=1 ftr=1 comments=1 fields=1 bookmarks=1 warnings=0
-doc.inspect            DOC-2 p=12 (+1 clause inserted with track changes)
-doc.relationship_check relationships=6 referenced=3 external=1 issues=0
-doc.roundtrip          DOC-1 zero_diff=true parts_compared=9
-doc.change_summary     DOC-2 insertions=2 deletions=1 authors=张三:2 李四:1
-redline.diff           DOC-1 → DOC-2 added=2 removed=1 hunks=3
+doc_inspect            DOC-1 parts=9 p=11 tbl=1 hdr=1 ftr=1 comments=1 fields=1 bookmarks=1 warnings=0
+doc_inspect            DOC-2 p=12 (+1 clause inserted with track changes)
+doc_relationship_check relationships=6 referenced=3 external=1 issues=0
+doc_roundtrip          DOC-1 zero_diff=true parts_compared=9
+doc_change_summary     DOC-2 insertions=2 deletions=1 authors=张三:2 李四:1
+redline_diff           DOC-1 → DOC-2 added=2 removed=1 hunks=3
   - 第二条 合同金额：人民币 120,000 元（含税）。
   + 第二条 合同金额：人民币 150,000 元（含税）。
   + 第四条 保密条款：双方对合同内容保密，期限三年。
