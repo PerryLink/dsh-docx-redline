@@ -3,7 +3,7 @@
 ## 2026-10-31 — S1 / 0.1.0-alpha.0
 
 - Gate: 0 real DOCX pairs / 0 malformed; user-approved public/synthetic demo; `partial`, `not counted`.
-- Tools: `doc.inspect`, `doc.roundtrip`; one `docx` domain/table; 5 source + config files.
+- Tools: `doc_inspect`, `doc_roundtrip`; one `docx` domain/table; 5 source + config files.
 - `pnpm test` 4/4; `gate:sku01` 3 rows (roundtrip 20/20, structure 6/6, malformed 5/5).
 - Name audit: `dsh-docx-redline` and bare `dsh-docx-redline` both npm 404; similar packages exist (`@ansonlai/docx-redline-js`, `docxodus`, `jubarte-redlines`), different scope/API.
 - Publish: pending.
@@ -29,12 +29,12 @@
 
 ### alpha.2 — text-level diff
 
-- Added `redline.diff` (paragraph LCS, add/remove hunks); does not write OOXML; public samples remain MIT.
+- Added `redline_diff` (paragraph LCS, add/remove hunks); does not write OOXML; public samples remain MIT.
 
 ### alpha.2 verified
 
-- `latest`/`next` alpha.2; 11/11 tests; CI run 41168790819 success. `redline.diff` is text-level only.
+- `latest`/`next` alpha.2; 11/11 tests; CI run 41168790819 success. `redline_diff` is text-level only.
 
 ### alpha.3 — limited OOXML replace
 
-- Added `doc.replace_text`; exact text run write; tests 13/13.
+- Added `doc_replace_text`; exact text run write; tests 13/13.

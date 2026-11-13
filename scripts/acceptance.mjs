@@ -60,8 +60,8 @@ const coverage = new Set()
 try {
   const table = new FakeTable()
   const tools = createTools({ table, baseDir: path.join(dir, 'store'), inputRoots: [dir] })
-  const inspect = tools.find((tool) => tool.name === 'doc.inspect')
-  const roundtrip = tools.find((tool) => tool.name === 'doc.roundtrip')
+  const inspect = tools.find((tool) => tool.name === 'doc_inspect')
+  const roundtrip = tools.find((tool) => tool.name === 'doc_roundtrip')
   const exec = { callId: 'acceptance', agent: { id: 'acceptance' } }
   for (let index = 0; index < 20; index += 1) {
     const file = path.join(dir, `sample-${index}.docx`)

@@ -18,7 +18,7 @@ for (const name of files) {
   })
 }
 
-test('redline.diff on two public MIT DOCX files', async () => {
+test('redline_diff on two public MIT DOCX files', async () => {
   const { mkdtemp, rm } = await import('node:fs/promises')
   const { tmpdir } = await import('node:os')
   const { createTools } = await import('../lib/plugin/tools.js')
@@ -36,9 +36,9 @@ test('redline.diff on two public MIT DOCX files', async () => {
     const tools = createTools({ table: new FakeTable(), baseDir: work, inputRoots: [dir] })
     const byName = Object.fromEntries(tools.map((tool) => [tool.name, tool]))
     const exec = { callId: 'public-diff', agent: { id: 'tester' } }
-    const base = await byName['doc.inspect'].execute({ path: baseFile }, exec)
-    const target = await byName['doc.inspect'].execute({ path: targetFile }, exec)
-    const diff = await byName['redline.diff'].execute({ base_doc_id: base.doc_id, target_doc_id: target.doc_id }, exec)
+    const base = await byName['doc_inspect'].execute({ path: baseFile }, exec)
+    const target = await byName['doc_inspect'].execute({ path: targetFile }, exec)
+    const diff = await byName['redline_diff'].execute({ base_doc_id: base.doc_id, target_doc_id: target.doc_id }, exec)
     assert.ok(diff.added + diff.removed > 0)
   } finally {
     await rm(work, { recursive: true, force: true })
@@ -57,8 +57,8 @@ test('public DOCX: limited text replace preserves non-document parts', async () 
     const by = Object.fromEntries(tools.map((tool) => [tool.name, tool]))
     const exec = { callId: 'public-replace', agent: { id: 'tester' } }
     const before = docxPartHashes(readFileSync(source))
-    const inspected = await by['doc.inspect'].execute({ path: source }, exec)
-    const replaced = await by['doc.replace_text'].execute({ doc_id: inspected.doc_id, find: 'Document text', replace: 'Changed text' }, exec)
+    const inspected = await by['doc_inspect'].execute({ path: source }, exec)
+    const replaced = await by['doc_replace_text'].execute({ doc_id: inspected.doc_id, find: 'Document text', replace: 'Changed text' }, exec)
     const after = docxPartHashes(await readFile(replaced.path))
     assert.notEqual(before.get('word/document.xml'), after.get('word/document.xml'))
     for (const [name, hash] of before) if (name !== 'word/document.xml') assert.equal(after.get(name), hash, name)

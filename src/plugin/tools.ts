@@ -1,4 +1,4 @@
-/** S1 model-facing tools: doc.inspect and doc.roundtrip. */
+/** S1 model-facing tools: doc_inspect and doc_roundtrip. */
 
 import { createHash } from 'node:crypto'
 import { readFile, realpath, stat, writeFile, mkdir } from 'node:fs/promises'
@@ -88,7 +88,7 @@ function structureOut() {
 
 export function createTools(deps: ToolDeps) {
   const inspect = defineTool({
-    name: 'doc.inspect',
+    name: 'doc_inspect',
     description: 'Inspect a local DOCX structure: parts and SHA-256, paragraphs, tables, headers/footers, footnotes, comments, fields, bookmarks, numbering, sections and styles. Read-only after storing the original locally.',
     parameters: {
       path: { type: 'string', required: true, description: 'Local .docx path under the configured input roots' },
@@ -161,7 +161,7 @@ export function createTools(deps: ToolDeps) {
   })
 
   const roundtrip = defineTool({
-    name: 'doc.roundtrip',
+    name: 'doc_roundtrip',
     description: 'Copy an inspected DOCX to a new file, unpack both packages and compare every part hash; returns a part-wise identical report. Local R1 write; no XML/OOXML generation.',
     parameters: {
       doc_id: { type: 'string', required: true },
@@ -185,7 +185,7 @@ export function createTools(deps: ToolDeps) {
     },
     async execute(args) {
       const record = deps.table.get(args.doc_id)
-      if (!record) throw new DocxError('E_DOC_DOC_NOT_FOUND', `找不到这份文档记录（E_DOC_DOC_NOT_FOUND）｜下一步：先用 doc.inspect 读一次，再拿返回的 doc_id 继续`)
+      if (!record) throw new DocxError('E_DOC_DOC_NOT_FOUND', `找不到这份文档记录（E_DOC_DOC_NOT_FOUND）｜下一步：先用 doc_inspect 读一次，再拿返回的 doc_id 继续`)
       const buffer = await readFile(record.source_path)
       const inputSha = sha256Buffer(buffer)
       const outDir = path.join(deps.baseDir, 'roundtrip')
@@ -233,7 +233,7 @@ export function createTools(deps: ToolDeps) {
 
 
   const diff = defineTool({
-    name: 'redline.diff',
+    name: 'redline_diff',
     description: 'Text-level paragraph diff between two inspected DOCX documents: added/removed paragraphs and ordered hunks. Read-only; does NOT write OOXML or produce a Word redline.',
     parameters: { base_doc_id: { type: 'string', required: true }, target_doc_id: { type: 'string', required: true } },
     output: {
@@ -271,7 +271,7 @@ export function createTools(deps: ToolDeps) {
 
 
   const replaceText = defineTool({
-    name: 'doc.replace_text',
+    name: 'doc_replace_text',
     description: 'Replace one exact text run in word/document.xml and write a new DOCX. Limited OOXML write: does not preserve/alter comments or fields beyond the matched text; fail-closed unless exactly one match. Local R1 write.',
     parameters: { doc_id: { type: 'string', required: true }, find: { type: 'string', required: true }, replace: { type: 'string', required: true }, output_name: { type: 'string' } },
     output: { schema: { type: 'object', additionalProperties: false, properties: { path: { type: 'string', required: true }, sha256: { type: 'string', required: true }, replacements: { type: 'number', required: true } } }, render: (_a, v) => text(`replaced 1 run -> ${v.path}`) },
@@ -289,7 +289,7 @@ export function createTools(deps: ToolDeps) {
   })
 
   const changeSummary = defineTool({
-    name: 'doc.change_summary',
+    name: 'doc_change_summary',
     description: 'Count tracked revisions in a local DOCX (OOXML WML w:ins / w:del and their authors). Read-only; it does not accept or reject changes.',
     parameters: { path: { type: 'string', required: true, description: 'Local .docx path under the configured input roots' } },
     output: { schema: { type: 'object', additionalProperties: false, properties: { insertions: { type: 'number', required: true }, deletions: { type: 'number', required: true }, total: { type: 'number', required: true }, authors: { type: 'json', required: true } } }, render: (_a, v) => text(`revisions ${v.total} (ins ${v.insertions} / del ${v.deletions})`) },
@@ -301,7 +301,7 @@ export function createTools(deps: ToolDeps) {
   })
 
   const relCheck = defineTool({
-    name: 'doc.relationship_check',
+    name: 'doc_relationship_check',
     description: 'Check OOXML package relationships: every r:id/r:embed in document.xml is declared in document.xml.rels, and every internal target part exists. Read-only; no repair.',
     parameters: { path: { type: 'string', required: true, description: 'Local .docx path under the configured input roots' } },
     output: { schema: { type: 'object', additionalProperties: false, properties: { relationships: { type: 'number', required: true }, referenced: { type: 'number', required: true }, external: { type: 'number', required: true }, issues: { type: 'array', required: true, items: { type: 'object', additionalProperties: false, properties: { code: { type: 'string', required: true }, detail: { type: 'string', required: true } } } } } }, render: (_a, v) => text(`relationships ${v.relationships}, issues ${v.issues.length}`) },

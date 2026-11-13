@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+## [0.2.0] — 2026-11-13
+
+### Breaking
+
+- **All six tool names now use underscores, not dots.** The registered surface is `doc_inspect`, `doc_roundtrip`, `redline_diff`, `doc_replace_text`, `doc_change_summary`, `doc_relationship_check`. The DeepSeek provider validates every `tools[].name` against `^[a-zA-Z0-9_-]+$`; a single dotted name invalidated the whole `tools` array (`Invalid 'tools[N].name'`), so requests carrying the tools could not succeed. **Migration:** rewrite each pre-0.2 tool name by replacing its `.` with `_` — namespaces (`doc` / `redline`), parameters, outputs, permission levels and behaviour are unchanged — then update prompts, scripts, saved tool calls and permission allowlists. There is no dotted alias in 0.2.0. Under this package's compatibility promise a breaking tool-surface change requires a minor bump, hence 0.1.1 → 0.2.0.
+- Added `test/tool-name-wire.test.mjs`: every registered tool name must match `^[a-zA-Z0-9_-]+$`, must not contain a dot, must keep its `doc_`/`redline_` namespace, and names must be unique — a regression test for this class of provider rejection.
+
 ### Fixed
 
 - Resolve internal relationship targets relative to `word/document.xml`, including `.` and `..` segments, before checking package parts. Valid parent-relative targets no longer produce false missing-part reports on Windows or POSIX hosts.
@@ -25,8 +32,8 @@
 ### Security
 
 - Every DOCX read now goes through `safeUnzip()` with pre-decompression limits (1000 entries, 4MB per entry, 32MB total, 100:1 compression above 1MB) and throws `E_DOC_ZIP_LIMIT`; actual sizes are re-checked after inflate. This covers all six former `unzipSync` call sites.
-- `doc.replace_text` uses a function replacement so `$&`, `$1` and `` $` `` stay literal, validates the generated WML with `XMLValidator`/`XMLParser`, and fails before writing.
-- `doc.roundtrip` now unpacks both packages and compares every part instead of treating whole-file SHA equality as proof; the output and stored record add `extra_parts`.
+- `doc_replace_text` uses a function replacement so `$&`, `$1` and `` $` `` stay literal, validates the generated WML with `XMLValidator`/`XMLParser`, and fails before writing.
+- `doc_roundtrip` now unpacks both packages and compares every part instead of treating whole-file SHA equality as proof; the output and stored record add `extra_parts`.
 
 ### Changed
 
@@ -40,13 +47,13 @@
 
 ### Added
 
-- `doc.relationship_check`: OOXML package relationship integrity — every `r:id`/`r:embed` in `document.xml` must be declared in `document.xml.rels`, and every internal target part must exist in the zip. Verified by `node --test test/*.test.mjs` (22/22).
+- `doc_relationship_check`: OOXML package relationship integrity — every `r:id`/`r:embed` in `document.xml` must be declared in `document.xml.rels`, and every internal target part must exist in the zip. Verified by `node --test test/*.test.mjs` (22/22).
 
 ## [Unreleased]
 
 ### Added
 
-- `doc.change_summary`: tracked-revision summary for a local DOCX — insertion/deletion counts and per-author totals from OOXML WML `w:ins` / `w:del`. Read-only; it does not accept or reject revisions. Verified by `node --test test/*.test.mjs` (18/18).
+- `doc_change_summary`: tracked-revision summary for a local DOCX — insertion/deletion counts and per-author totals from OOXML WML `w:ins` / `w:del`. Read-only; it does not accept or reject revisions. Verified by `node --test test/*.test.mjs` (18/18).
 
 ## [0.1.0-alpha.9] — 2026-11-01
 

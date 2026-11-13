@@ -13,7 +13,7 @@
  * `contract-v2.docx` differs from v1 in exactly two ways:
  *   1. the amount paragraph carries a tracked replacement (w:del "120,000" → w:ins "150,000", author 张三)
  *   2. one tracked-inserted clause at the end (author 李四)
- * so redline.diff reports +2/-1 and doc.change_summary reports 2 insertions / 1 deletion.
+ * so redline_diff reports +2/-1 and doc_change_summary reports 2 insertions / 1 deletion.
  *
  *   node scripts/make-samples.mjs
  */

@@ -37,14 +37,14 @@ dsh plugin --profile <profile> add dsh-docx-redline
 
 ## O que é
 
-O `dsh-docx-redline` lê um `.docx` local (um pacote ZIP OOXML) e devolve SHA-256 por parte mais 13 contagens de estrutura. Quando necessário, copia o pacote para uma verificação de roundtrip idêntica parte por parte, faz um diff de texto em nível de parágrafo entre dois documentos inspecionados, conta revisões `w:ins` / `w:del`, verifica a integridade das relações do pacote e substitui um run `w:t` sob uma **única correspondência exata**. As seis ferramentas usam namespace `doc.` / `redline.`; não há rede, chamada a modelo nem upload, e o arquivo original nunca é modificado.
+O `dsh-docx-redline` lê um `.docx` local (um pacote ZIP OOXML) e devolve SHA-256 por parte mais 13 contagens de estrutura. Quando necessário, copia o pacote para uma verificação de roundtrip idêntica parte por parte, faz um diff de texto em nível de parágrafo entre dois documentos inspecionados, conta revisões `w:ins` / `w:del`, verifica a integridade das relações do pacote e substitui um run `w:t` sob uma **única correspondência exata**. As seis ferramentas usam namespace `doc_` / `redline_`; não há rede, chamada a modelo nem upload, e o arquivo original nunca é modificado.
 
 - **Adequado para**: comparar o corpo de duas versões de um contrato ou documento oficial; confirmar que um `.docx` recebido está estruturalmente completo (parágrafos, tabelas, cabeçalhos/rodapés, comentários, campos, marcadores); substituir um texto dentro de um limite controlado preservando o original.
 - **Não adequado para**: produzir controle de alterações ou aceitar/rejeitar revisões (este pacote não escreve tracked changes); PDFs escaneados ou imagens; documentos criptografados; `.doc` (binário 97-2003).
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-docx-redline-flow-v5-dark.svg">
-  <img src="docs/assets/dsh-docx-redline-flow-v5-light.svg" width="100%" alt="dsh-docx-redline estrutura: um DOCX local passa pelo portão de caminhos e pelos limites ZIP; doc.inspect devolve SHA-256 por parte e 13 contagens; doc.roundtrip compara as mesmas partes e chega a zero_diff">
+  <img src="docs/assets/dsh-docx-redline-flow-v5-light.svg" width="100%" alt="dsh-docx-redline estrutura: um DOCX local passa pelo portão de caminhos e pelos limites ZIP; doc_inspect devolve SHA-256 por parte e 13 contagens; doc_roundtrip compara as mesmas partes e chega a zero_diff">
 </picture>
 
 ## Instalação em três passos
@@ -79,10 +79,10 @@ O `dsh-docx-redline` lê um `.docx` local (um pacote ZIP OOXML) e devolve SHA-25
 
    ```
    $ node samples/quickstart/run.mjs
-   doc.inspect            DOC-1 parts=9 p=11 tbl=1 hdr=1 ftr=1 comments=1 fields=1 bookmarks=1 warnings=0
-   doc.relationship_check relationships=6 referenced=3 external=1 issues=0
-   doc.roundtrip          DOC-1 zero_diff=true parts_compared=9
-   redline.diff           DOC-1 → DOC-2 added=2 removed=1 hunks=3
+   doc_inspect            DOC-1 parts=9 p=11 tbl=1 hdr=1 ftr=1 comments=1 fields=1 bookmarks=1 warnings=0
+   doc_relationship_check relationships=6 referenced=3 external=1 issues=0
+   doc_roundtrip          DOC-1 zero_diff=true parts_compared=9
+   redline_diff           DOC-1 → DOC-2 added=2 removed=1 hunks=3
    ok: quickstart finished (6 tool calls, roundtrip byte-identical per part)
    ```
 
@@ -99,12 +99,12 @@ Todos os plugins da PerryLink podem ser explorados no marketplace integrado do D
 
 ## Capacidades principais
 
-- **Inspeção de estrutura** — `doc.inspect` lê um `.docx` ZIP/XML local, guarda o original e devolve SHA-256 por parte mais 13 contagens: parágrafos, tabelas, linhas/células de tabela, cabeçalhos/rodapés, notas de rodapé, comentários, campos, marcadores, parágrafos numerados, seções e estilos. O mesmo arquivo é deduplicado por SHA-256, então uma inspeção repetida devolve `existing: true`.
-- **Roundtrip parte por parte** — `doc.roundtrip` copia o pacote, descompacta entrada e saída separadamente e compara o hash de cada parte; devolve `zero_diff`, `parts_compared`, partes ausentes/extras e divergências de hash. Nunca compara um arquivo consigo mesmo.
-- **Diff em nível de parágrafo** — `redline.diff` faz uma comparação LCS de parágrafos entre dois documentos inspecionados e devolve as contagens de adicionados/removidos e hunks ordenados; somente leitura, sem escrita OOXML e sem tracked changes do Word.
-- **Resumo de revisões** — `doc.change_summary` conta `w:ins` / `w:del` e a distribuição por autor; apenas conta, nunca aceita ou rejeita revisões.
-- **Integridade de relações** — `doc.relationship_check` verifica que cada `r:id` / `r:embed` / `r:link` de `document.xml` está declarado em `document.xml.rels` e que as partes internas de destino existem; destinos externos são contados à parte. Apenas informa, nunca repara.
-- **Substituição limitada** — `doc.replace_text` substitui exatamente um run `w:t` de `word/document.xml` e grava um arquivo novo em `outputs/`; zero ou várias correspondências e texto dividido entre runs falham de forma segura, e o WML gerado é validado antes da gravação.
+- **Inspeção de estrutura** — `doc_inspect` lê um `.docx` ZIP/XML local, guarda o original e devolve SHA-256 por parte mais 13 contagens: parágrafos, tabelas, linhas/células de tabela, cabeçalhos/rodapés, notas de rodapé, comentários, campos, marcadores, parágrafos numerados, seções e estilos. O mesmo arquivo é deduplicado por SHA-256, então uma inspeção repetida devolve `existing: true`.
+- **Roundtrip parte por parte** — `doc_roundtrip` copia o pacote, descompacta entrada e saída separadamente e compara o hash de cada parte; devolve `zero_diff`, `parts_compared`, partes ausentes/extras e divergências de hash. Nunca compara um arquivo consigo mesmo.
+- **Diff em nível de parágrafo** — `redline_diff` faz uma comparação LCS de parágrafos entre dois documentos inspecionados e devolve as contagens de adicionados/removidos e hunks ordenados; somente leitura, sem escrita OOXML e sem tracked changes do Word.
+- **Resumo de revisões** — `doc_change_summary` conta `w:ins` / `w:del` e a distribuição por autor; apenas conta, nunca aceita ou rejeita revisões.
+- **Integridade de relações** — `doc_relationship_check` verifica que cada `r:id` / `r:embed` / `r:link` de `document.xml` está declarado em `document.xml.rels` e que as partes internas de destino existem; destinos externos são contados à parte. Apenas informa, nunca repara.
+- **Substituição limitada** — `doc_replace_text` substitui exatamente um run `w:t` de `word/document.xml` e grava um arquivo novo em `outputs/`; zero ou várias correspondências e texto dividido entre runs falham de forma segura, e o WML gerado é validado antes da gravação.
 - **Somente local** — o código não contém chamadas HTTP / DNS / WebSocket; sem rede, sem modelo, sem upload, e os originais nunca são modificados.
 
 ### Superfície de ferramentas
@@ -113,12 +113,12 @@ Os nomes das ferramentas são a API estável (mantidos em inglês para coincidir
 
 | Ferramenta | Finalidade | Risco |
 |---|---|---|
-| `doc.inspect` | Ler um `.docx` ZIP/XML local, guardar o original e devolver SHA-256 por parte mais contagens de estrutura (parágrafos, tabelas, linhas/células, cabeçalhos/rodapés, notas de rodapé, comentários, campos, marcadores, parágrafos numerados, seções, estilos) | R1 gravação local (guarda o original) |
-| `doc.roundtrip` | Copiar o pacote, descompactar os dois lados e comparar o hash de cada parte; devolver um relatório idêntico parte por parte (`zero_diff` / `parts_compared` / ausentes / extras / hash divergente) | R1 gravação local |
-| `redline.diff` | Diff de parágrafos em nível de texto (LCS) entre dois documentos inspecionados: parágrafos adicionados/removidos e hunks ordenados; sem escrita OOXML | R0 somente leitura |
-| `doc.replace_text` | Substituir um run `w:t` exato em `word/document.xml` e gravar um arquivo novo em `outputs/`; falhar de forma segura quando o texto não é único ou abrange vários runs | R1 gravação local |
-| `doc.change_summary` | Contar revisões `w:ins` / `w:del` e autores; sem aceitar/rejeitar | R0 somente leitura |
-| `doc.relationship_check` | Verificar que `r:id` / `r:embed` / `r:link` estão declarados em `document.xml.rels` e que as partes internas existem; apenas informa, sem reparar | R0 somente leitura |
+| `doc_inspect` | Ler um `.docx` ZIP/XML local, guardar o original e devolver SHA-256 por parte mais contagens de estrutura (parágrafos, tabelas, linhas/células, cabeçalhos/rodapés, notas de rodapé, comentários, campos, marcadores, parágrafos numerados, seções, estilos) | R1 gravação local (guarda o original) |
+| `doc_roundtrip` | Copiar o pacote, descompactar os dois lados e comparar o hash de cada parte; devolver um relatório idêntico parte por parte (`zero_diff` / `parts_compared` / ausentes / extras / hash divergente) | R1 gravação local |
+| `redline_diff` | Diff de parágrafos em nível de texto (LCS) entre dois documentos inspecionados: parágrafos adicionados/removidos e hunks ordenados; sem escrita OOXML | R0 somente leitura |
+| `doc_replace_text` | Substituir um run `w:t` exato em `word/document.xml` e gravar um arquivo novo em `outputs/`; falhar de forma segura quando o texto não é único ou abrange vários runs | R1 gravação local |
+| `doc_change_summary` | Contar revisões `w:ins` / `w:del` e autores; sem aceitar/rejeitar | R0 somente leitura |
+| `doc_relationship_check` | Verificar que `r:id` / `r:embed` / `r:link` estão declarados em `document.xml.rels` e que as partes internas existem; apenas informa, sem reparar | R0 somente leitura |
 
 ### Entradas e saídas
 
@@ -191,8 +191,8 @@ Este plugin não tem chaves de configuração Schemastery: `cordis.patch.yml` in
 ```
 
 - O plugin declara `inject = ['tools', 'storageDomain']`: os dois serviços precisam estar presentes ou o plugin não monta; um `storageDomain` ausente nunca degrada em silêncio.
-- As ferramentas registram em `ctx.tools`; `doc.inspect` grava o original, `doc.roundtrip` grava uma cópia e `doc.replace_text` grava em `outputs/`; as outras três são somente leitura.
-- `doc_id` é criado por `doc.inspect` e guardado na tabela `documents` do domínio `docx` da sessão; uma sessão nova ou uma inspeção pulada deixa esse registro inexistente.
+- As ferramentas registram em `ctx.tools`; `doc_inspect` grava o original, `doc_roundtrip` grava uma cópia e `doc_replace_text` grava em `outputs/`; as outras três são somente leitura.
+- `doc_id` é criado por `doc_inspect` e guardado na tabela `documents` do domínio `docx` da sessão; uma sessão nova ou uma inspeção pulada deixa esse registro inexistente.
 
 </details>
 
@@ -208,7 +208,7 @@ Verifique se `node --version` é ≥24.9 e <25 e se `dsh --version` está dentro
 <details>
 <summary>Pode danificar meu documento?</summary>
 
-Não há escrita no original. `doc.inspect` apenas copia o original para `originals/`, `doc.roundtrip` apenas grava uma cópia em `roundtrip/` e `doc.replace_text` apenas grava um arquivo novo em `outputs/`. A substituição exige que o texto alvo seja **único** em `word/document.xml`; zero ou várias correspondências e texto dividido entre runs falham de forma segura, e o WML gerado é validado antes da gravação.
+Não há escrita no original. `doc_inspect` apenas copia o original para `originals/`, `doc_roundtrip` apenas grava uma cópia em `roundtrip/` e `doc_replace_text` apenas grava um arquivo novo em `outputs/`. A substituição exige que o texto alvo seja **único** em `word/document.xml`; zero ou várias correspondências e texto dividido entre runs falham de forma segura, e o WML gerado é validado antes da gravação.
 
 </details>
 
@@ -222,7 +222,7 @@ Não. Apenas `.docx` padrão (pacote ZIP OOXML, salvo pelo Word/WPS); `.doc` (bi
 <details>
 <summary>O resultado não bate ou ele avisa de cabeçalhos/rodapés ausentes. Por quê?</summary>
 
-Veja primeiro `warnings`: ausência de cabeçalho/rodapé, campos, marcadores, numeração ou comentários é informada separadamente. O diff é de **texto em nível de parágrafo**, não revisões em nível de caractere; o texto excluído (`w:delText`) não faz parte do corpo atual. `doc.relationship_check` apenas informa `E_DOC_REL_UNRESOLVED` / `E_DOC_REL_MISSING_PART` e não repara — abrir e salvar novamente no Word costuma corrigir as relações.
+Veja primeiro `warnings`: ausência de cabeçalho/rodapé, campos, marcadores, numeração ou comentários é informada separadamente. O diff é de **texto em nível de parágrafo**, não revisões em nível de caractere; o texto excluído (`w:delText`) não faz parte do corpo atual. `doc_relationship_check` apenas informa `E_DOC_REL_UNRESOLVED` / `E_DOC_REL_MISSING_PART` e não repara — abrir e salvar novamente no Word costuma corrigir as relações.
 
 </details>
 
@@ -239,11 +239,11 @@ Apenas em `$DSH_HOME/storages/dsh-docx-redline` (ou `DSH_DOCX_HOME`): cópias do
 - **Escopo de escrita**: apenas a raiz de armazenamento do `dsh-docx-redline` (`originals/`, `roundtrip/`, `outputs/`); os originais nunca são modificados.
 - **Sem rede**: nenhuma chamada HTTP / DNS / WebSocket no código; sem sistemas externos e sem upload.
 - **Proteção contra ZIP bombs**: toda leitura passa por `safeUnzip()` com limites antes da descompactação (>1000 entradas, >4 MB por entrada, >32 MB descompactado, proporção >100 → `E_DOC_ZIP_LIMIT`), e os tamanhos reais são revistos após inflar.
-- **Substituição fail-closed**: `doc.replace_text` aceita apenas uma correspondência exata; a substituição em forma de função mantém `$&`, `$1` e similares como literais; o WML gerado é validado com `XMLValidator` / `XMLParser` e rejeitado antes de gravar se for inválido.
-- **Prova de roundtrip**: `doc.roundtrip` descompacta entrada e saída e compara o hash de cada parte em vez de comparar um pacote consigo mesmo.
+- **Substituição fail-closed**: `doc_replace_text` aceita apenas uma correspondência exata; a substituição em forma de função mantém `$&`, `$1` e similares como literais; o WML gerado é validado com `XMLValidator` / `XMLParser` e rejeitado antes de gravar se for inválido.
+- **Prova de roundtrip**: `doc_roundtrip` descompacta entrada e saída e compara o hash de cada parte em vez de comparar um pacote consigo mesmo.
 - **Hashes de evidência**: o SHA-256 do original, o SHA-256 por parte e o `evidence_sha256` do registro são reproduzíveis.
 - **Níveis de risco**: ferramentas que gravam são R1 (gravação local); as somente leitura são R0; ver a tabela de ferramentas em Capacidades principais.
-- **Checagem de relações somente leitura**: `doc.relationship_check` devolve issues e nunca modifica o pacote.
+- **Checagem de relações somente leitura**: `doc_relationship_check` devolve issues e nunca modifica o pacote.
 
 ## Permissões e dados
 
@@ -262,10 +262,10 @@ sistemas externos: nenhum
 ## Limitações conhecidas
 
 - **Apenas validação pública/sintética.** Alpha / parcial / não contabilizado / não GA; a evidência de cliente é de 0 pares reais de DOCX em duas versões e 0 DOCX malformados, e o E2 doc-core não é entregue. Isso não estabelece precisão com clientes, fidelidade Word/LibreOffice, precisão de posição de revisões nem prontidão GA.
-- **Nível de texto, não de caractere.** `redline.diff` compara parágrafos como texto, não revisões caractere a caractere; o texto excluído (`w:delText`) não faz parte do corpo atual.
-- **Sem tracked changes.** Não gera controle de alterações do Word nem aceita/rejeita revisões; `doc.change_summary` apenas conta `w:ins` / `w:del`.
-- **Superfície de substituição estreita.** `doc.replace_text` trabalha com um único run `w:t` exato; texto não único, zero correspondências e texto dividido entre runs falham; comentários e campos fora do texto correspondido ficam intactos.
-- **A checagem de relações não repara.** `doc.relationship_check` apenas informa referências não declaradas e destinos ausentes; reparar exige salvar novamente no Word ou editar o pacote.
+- **Nível de texto, não de caractere.** `redline_diff` compara parágrafos como texto, não revisões caractere a caractere; o texto excluído (`w:delText`) não faz parte do corpo atual.
+- **Sem tracked changes.** Não gera controle de alterações do Word nem aceita/rejeita revisões; `doc_change_summary` apenas conta `w:ins` / `w:del`.
+- **Superfície de substituição estreita.** `doc_replace_text` trabalha com um único run `w:t` exato; texto não único, zero correspondências e texto dividido entre runs falham; comentários e campos fora do texto correspondido ficam intactos.
+- **A checagem de relações não repara.** `doc_relationship_check` apenas informa referências não declaradas e destinos ausentes; reparar exige salvar novamente no Word ou editar o pacote.
 - **Limites de formato.** Sem `.doc` (binário 97-2003), PDF, documentos criptografados, digitalizações ou imagens; remova antes a senha dos arquivos criptografados.
 - **Limites ZIP.** ≤1000 entradas, ≤4 MB por entrada após descompactar, ≤32 MB descompactado, proporção ≤100 (para entradas acima de 1 MB); documentos enormes precisam ser divididos antes.
 - **Limite de raiz de entrada.** As ferramentas leem apenas arquivos sob `DSH_DOCX_INPUT_ROOTS` (cwd por padrão); um caminho fora da raiz é rejeitado.

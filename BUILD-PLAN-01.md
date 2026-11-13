@@ -8,8 +8,8 @@
 
 ## 2. Scope
 
-- `doc.inspect`: parts + SHA-256 + six structure families.
-- `doc.roundtrip`: byte-for-byte copy + all-part hash compare; zero-diff report.
+- `doc_inspect`: parts + SHA-256 + six structure families.
+- `doc_roundtrip`: byte-for-byte copy + all-part hash compare; zero-diff report.
 - One storage entity (`docx.documents`); no Client/Skill/Bundle/MCP.
 - No OOXML writing, diff, revisions, rendering, Word/LibreOffice automation.
 
@@ -17,8 +17,8 @@
 
 | Tool | Input | Output | Risk |
 |---|---|---|---|
-| `doc.inspect` | `path`, optional `entity_id` | `doc_id`, `sha256`, `size`, `existing`, `parts_count`, `structure`, `warnings` | R0 + local store |
-| `doc.roundtrip` | `doc_id` | `input_sha256`, `output_sha256`, `zero_diff`, `parts_compared`, `missing_parts`, `hash_mismatch` | R1 |
+| `doc_inspect` | `path`, optional `entity_id` | `doc_id`, `sha256`, `size`, `existing`, `parts_count`, `structure`, `warnings` | R0 + local store |
+| `doc_roundtrip` | `doc_id` | `input_sha256`, `output_sha256`, `zero_diff`, `parts_compared`, `missing_parts`, `hash_mismatch` | R1 |
 
 ## 4. Storage
 
