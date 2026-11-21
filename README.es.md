@@ -153,6 +153,11 @@ pnpm build && node samples/quickstart/run.mjs
 
 *Comando real `node samples/quickstart/run.mjs` sobre los dos DOCX sintéticos incluidos: 6 llamadas a herramientas. La imagen es un render 1:1 de `samples/quickstart/expected/console.txt`; no se reescribió nada.*
 
+![Ejecución real del quickstart de dsh-docx-redline](docs/assets/dsh-docx-redline-demo.gif)
+
+*La versión animada de la misma ejecución.*
+
+
 Ejemplo con fixture: entrada [`fixtures/public/python-docx/blk-containing-table.docx`](https://github.com/PerryLink/dsh-docx-redline/blob/main/fixtures/public/python-docx/blk-containing-table.docx) (muestra pública MIT); comando `pnpm test`.
 
 Aceptación: `node scripts/acceptance.mjs` genera `ACCEPTANCE.csv` (6 filas; las filas SKU son `counted=false`, la fila de la muestra incluida `PS1-QS01` es `counted=true`):

@@ -153,6 +153,11 @@ pnpm build && node samples/quickstart/run.mjs
 
 *वास्तविक कमांड `node samples/quickstart/run.mjs` साथ भेजे गए दो सिंथेटिक DOCX पर: 6 टूल कॉल। चित्र `samples/quickstart/expected/console.txt` का 1:1 रेंडर है; कुछ भी दोबारा टाइप नहीं किया गया।*
 
+![dsh-docx-redline quickstart का वास्तविक टर्मिनल रन](docs/assets/dsh-docx-redline-demo.gif)
+
+*उसी असली रन का एनिमेटेड संस्करण।*
+
+
 fixture उदाहरण: इनपुट [`fixtures/public/python-docx/blk-containing-table.docx`](https://github.com/PerryLink/dsh-docx-redline/blob/main/fixtures/public/python-docx/blk-containing-table.docx) (सार्वजनिक MIT नमूना); कमांड `pnpm test`।
 
 स्वीकृति: `node scripts/acceptance.mjs` `ACCEPTANCE.csv` बनाता है (6 पंक्तियाँ; SKU पंक्तियाँ `counted=false`, साथ भेजी गई नमूना पंक्ति `PS1-QS01` `counted=true`):

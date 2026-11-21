@@ -154,6 +154,11 @@ pnpm build && node samples/quickstart/run.mjs
 
 *真实命令 `node samples/quickstart/run.mjs` 在随包两份合成 DOCX 上完成 6 次工具调用；截图是 `samples/quickstart/expected/console.txt` 的 1:1 渲染，未重打。*
 
+![dsh-docx-redline quickstart 真实运行输出](docs/assets/dsh-docx-redline-demo.gif)
+
+*同一段真实运行的动图版本。*
+
+
 fixture 示例：输入 [`fixtures/public/python-docx/blk-containing-table.docx`](https://github.com/PerryLink/dsh-docx-redline/blob/main/fixtures/public/python-docx/blk-containing-table.docx)（MIT 许可公开样本）；命令 `pnpm test`。
 
 验收：`node scripts/acceptance.mjs` 生成 `ACCEPTANCE.csv`（6 行；SKU 行 `counted=false`，随包样例行 `PS1-QS01` 为 `counted=true`）：
