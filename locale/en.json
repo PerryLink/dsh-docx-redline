@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "DOCX inspect & text diff",
+    "description": "Inspect DOCX structure, verify a part-wise identical roundtrip, and diff two versions paragraph by paragraph — entirely local, no network."
+  }
+}

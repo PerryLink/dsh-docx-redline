@@ -7,6 +7,8 @@
 
 # dsh-docx-redline
 
+Current version `0.2.2`.
+
 **Inspect DOCX structure, verify a part-wise identical roundtrip, and diff two versions paragraph by paragraph — entirely local, no network.**
 
 A DOCX structure-inspection and text-diff plugin for DeepSeek Harness: it reads local `.docx` OOXML packages, returns per-part SHA-256 plus 13 structure counts, and adds roundtrip verification, revision summaries, relationship checks and single-run text replacement when you need them.
