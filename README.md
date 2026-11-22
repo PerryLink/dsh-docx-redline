@@ -11,6 +11,8 @@
 
 面向 DeepSeek Harness 的 DOCX 结构检查与文本级比对插件：读本地 `.docx` 的 OOXML 包，返回逐部件 SHA-256 与 13 项结构计数，并在需要时做往返校验、修订统计、关系检查与单 run 文本替换。
 
+最近一次核验：DeepSeek Harness `dsh-v0.2.3-alpha.1`（2026-11-22）。
+
 [安装](#三步上手) · [配置](#配置) · [FAQ](#faq) · [简体中文](README.md) · [English](README.en.md) · [Español](README.es.md) · [Português](README.pt.md) · [हिन्दी](README.hi.md)
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-3366CC?style=flat-square&labelColor=2B3245)](LICENSE)
@@ -157,7 +159,6 @@ pnpm build && node samples/quickstart/run.mjs
 ![dsh-docx-redline quickstart 真实运行输出](docs/assets/dsh-docx-redline-demo.gif)
 
 *同一段真实运行的动图版本。*
-
 
 fixture 示例：输入 [`fixtures/public/python-docx/blk-containing-table.docx`](https://github.com/PerryLink/dsh-docx-redline/blob/main/fixtures/public/python-docx/blk-containing-table.docx)（MIT 许可公开样本）；命令 `pnpm test`。
 

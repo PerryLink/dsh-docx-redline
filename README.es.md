@@ -11,6 +11,8 @@
 
 Un plugin de inspección de estructura DOCX y diff de texto para DeepSeek Harness: lee paquetes OOXML `.docx` locales, devuelve SHA-256 por parte y 13 recuentos de estructura, y añade verificación de roundtrip, resumen de revisiones, comprobación de relaciones y reemplazo de texto en una sola ejecución cuando hace falta.
 
+Última verificación: DeepSeek Harness `dsh-v0.2.3-alpha.1` (2026-11-22).
+
 [Instalar](#instalación-en-tres-pasos) · [Configuración](#configuración) · [FAQ](#faq) · [简体中文](README.md) · [English](README.en.md) · [Español](README.es.md) · [Português](README.pt.md) · [हिन्दी](README.hi.md)
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-3366CC?style=flat-square&labelColor=2B3245)](LICENSE)
@@ -156,7 +158,6 @@ pnpm build && node samples/quickstart/run.mjs
 ![Ejecución real del quickstart de dsh-docx-redline](docs/assets/dsh-docx-redline-demo.gif)
 
 *La versión animada de la misma ejecución.*
-
 
 Ejemplo con fixture: entrada [`fixtures/public/python-docx/blk-containing-table.docx`](https://github.com/PerryLink/dsh-docx-redline/blob/main/fixtures/public/python-docx/blk-containing-table.docx) (muestra pública MIT); comando `pnpm test`.
 

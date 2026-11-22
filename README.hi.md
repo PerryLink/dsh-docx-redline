@@ -11,6 +11,8 @@
 
 DeepSeek Harness के लिए DOCX संरचना-निरीक्षण और टेक्स्ट-डिफ़ प्लगइन: स्थानीय `.docx` OOXML पैकेज पढ़ता है, हिस्सा-दर-हिस्सा SHA-256 और 13 संरचना गणनाएँ लौटाता है, और ज़रूरत पड़ने पर राउंडट्रिप सत्यापन, संशोधन सारांश, रिलेशनशिप जाँच और एक ही रन में टेक्स्ट रिप्लेस जोड़ता है।
 
+अंतिम सत्यापन: DeepSeek Harness `dsh-v0.2.3-alpha.1` (2026-11-22).
+
 [इंस्टॉल](#तीन-चरणों-में-शुरुआत) · [कॉन्फ़िगरेशन](#कॉन्फ़िगरेशन) · [FAQ](#faq) · [简体中文](README.md) · [English](README.en.md) · [Español](README.es.md) · [Português](README.pt.md) · [हिन्दी](README.hi.md)
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-3366CC?style=flat-square&labelColor=2B3245)](LICENSE)
@@ -156,7 +158,6 @@ pnpm build && node samples/quickstart/run.mjs
 ![dsh-docx-redline quickstart का वास्तविक टर्मिनल रन](docs/assets/dsh-docx-redline-demo.gif)
 
 *उसी असली रन का एनिमेटेड संस्करण।*
-
 
 fixture उदाहरण: इनपुट [`fixtures/public/python-docx/blk-containing-table.docx`](https://github.com/PerryLink/dsh-docx-redline/blob/main/fixtures/public/python-docx/blk-containing-table.docx) (सार्वजनिक MIT नमूना); कमांड `pnpm test`।
 
